@@ -1,6 +1,0 @@
-git init
-git add app.py
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/SunilSMenon/smartshape-app.git
-git push -u origin main

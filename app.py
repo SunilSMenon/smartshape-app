@@ -1,4 +1,5 @@
 import streamlit as st
+import requests
 
 st.title("Smart Shape - Powered by AI")
 st.subheader("Sustainable weight loss for busy professionals")

@@ -43,4 +43,31 @@ elif choice == "Meal Plans":
 
 elif choice == "Progress":
     st.header("Your Progress")
-    st.write("Feature coming soon!")
+
+    # Initialize session state for progress tracking
+    if "weights" not in st.session_state:
+        st.session_state.weights = []
+        st.session_state.dates = []
+
+    # Input for today's weight
+    import datetime
+    today = datetime.date.today()
+    weight = st.number_input("Enter your weight for today (kg):", min_value=0.0, max_value=300.0, step=0.1)
+    if st.button("Save Weight"):
+        st.session_state.weights.append(weight)
+        st.session_state.dates.append(today)
+        st.success("Weight saved!")
+
+    # Show progress chart if there is data
+    if st.session_state.weights:
+        st.subheader("Progress Chart")
+        import pandas as pd
+        df = pd.DataFrame({
+            "Date": st.session_state.dates,
+            "Weight": st.session_state.weights
+        })
+        st.line_chart(df.set_index("Date"))
+        st.write(df)
+    else:
+        st.info("No progress data yet. Enter your weight to get started!")
+

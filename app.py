@@ -1,5 +1,7 @@
 import streamlit as st
 import requests
+from PIL import Image
+import io
 
 st.title("Smart Shape - Powered by AI")
 st.subheader("Sustainable weight loss for busy professionals")

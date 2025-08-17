@@ -10,6 +10,10 @@ Welcome to Smart Shape! Get personalized meal plans, effortless food logging, an
 menu = ["Home", "Log Meal", "Meal Plans", "Progress"]
 choice = st.sidebar.selectbox("Menu", menu)
 
+# Initialize session state for meal logs
+if "meal_logs" not in st.session_state:
+    st.session_state.meal_logs = []
+
 if choice == "Home":
     st.header("Welcome!")
     st.write("Track your journey and join our community.")
@@ -17,9 +21,21 @@ if choice == "Home":
 elif choice == "Log Meal":
     st.header("Log Your Meal")
     uploaded_file = st.file_uploader("Upload a photo of your meal", type=["jpg", "jpeg", "png"])
-    if uploaded_file is not None:
-        st.image(uploaded_file, caption="Your meal", use_column_width=True)
-        st.success("Meal logged! (AI analysis coming soon)")
+    meal_note = st.text_input("Add a note about your meal (optional)")
+    if st.button("Save Meal"):
+        if uploaded_file is not None:
+            st.session_state.meal_logs.append({
+                "image": uploaded_file,
+                "note": meal_note
+            })
+            st.success("Meal logged!")
+        else:
+            st.warning("Please upload a photo before saving.")
+
+    st.subheader("Your Logged Meals")
+    for i, meal in enumerate(st.session_state.meal_logs):
+        st.image(meal["image"], caption=f"Meal {i+1}", use_column_width=True)
+        st.write(meal["note"])
 
 elif choice == "Meal Plans":
     st.header("Your Personalized Meal Plan")

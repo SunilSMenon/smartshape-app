@@ -24,7 +24,7 @@ elif choice == "Log Meal":
     meal_note = st.text_input("Add a note about your meal (optional)")
 
     # Google Vision API key (replace with your actual key)
-    GOOGLE_VISION_API_KEY = "AIzaSyAxwPbi1bYxZh0_RPP3RX0CNir8lCnjfYA"
+    GOOGLE_VISION_API_KEY = AIzaSyAxwPbi1bYxZh0_RPP3RX0CNir8lCnjfYA
 
     def get_food_labels(image_bytes, api_key):
         import base64

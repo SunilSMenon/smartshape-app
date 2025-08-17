@@ -24,7 +24,7 @@ elif choice == "Log Meal":
     meal_note = st.text_input("Add a note about your meal (optional)")
 
     # Google Vision API key (replace with your actual key)
-    GOOGLE_VISION_API_KEY = AIzaSyAxwPbi1bYxZh0_RPP3RX0CNir8lCnjfYA
+    GOOGLE_VISION_API_KEY = "AIzaSyAxwPbi1bYxZh0_RPP3RX0CNir8lCnjfYA"
 
     def get_food_labels(image_bytes, api_key):
         import base64
@@ -42,7 +42,8 @@ elif choice == "Log Meal":
             labels = response.json()["responses"][0].get("labelAnnotations", [])
             return [label["description"] for label in labels]
         else:
-            return ["Error: Could not analyze image"]
+            st.error(f"API Error: {response.text}")
+            return [f"Error: {response.text}"]
 
     if st.button("Save Meal"):
         if uploaded_file is not None:

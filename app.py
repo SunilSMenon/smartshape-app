@@ -22,11 +22,36 @@ elif choice == "Log Meal":
     st.header("Log Your Meal")
     uploaded_file = st.file_uploader("Upload a photo of your meal", type=["jpg", "jpeg", "png"])
     meal_note = st.text_input("Add a note about your meal (optional)")
+
+    # Google Vision API key (replace with your actual key)
+    GOOGLE_VISION_API_KEY = "AIzaSyAxwPbi1bYxZh0_RPP3RX0CNir8lCnjfYA"
+
+    def get_food_labels(image_bytes, api_key):
+        import base64
+        import requests
+        api_url = f"https://vision.googleapis.com/v1/images:annotate?key={api_key}"
+        img_base64 = base64.b64encode(image_bytes).decode()
+        request_body = {
+            "requests": [{
+                "image": {"content": img_base64},
+                "features": [{"type": "LABEL_DETECTION", "maxResults": 5}]
+            }]
+        }
+        response = requests.post(api_url, json=request_body)
+        if response.status_code == 200:
+            labels = response.json()["responses"][0].get("labelAnnotations", [])
+            return [label["description"] for label in labels]
+        else:
+            return ["Error: Could not analyze image"]
+
     if st.button("Save Meal"):
         if uploaded_file is not None:
+            # Analyze image with Google Vision
+            labels = get_food_labels(uploaded_file.read(), GOOGLE_VISION_API_KEY)
             st.session_state.meal_logs.append({
                 "image": uploaded_file,
-                "note": meal_note
+                "note": meal_note,
+                "labels": labels
             })
             st.success("Meal logged!")
         else:
@@ -36,6 +61,9 @@ elif choice == "Log Meal":
     for i, meal in enumerate(st.session_state.meal_logs):
         st.image(meal["image"], caption=f"Meal {i+1}", use_column_width=True)
         st.write(meal["note"])
+        if "labels" in meal:
+            st.write("AI Detected:", ", ".join(meal["labels"]))
+
 
 elif choice == "Meal Plans":
     st.header("Your Personalized Meal Plan")
